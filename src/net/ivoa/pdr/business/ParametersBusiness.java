@@ -1,0 +1,26 @@
+package net.ivoa.pdr.business;
+
+import java.sql.SQLException;
+import java.util.Map;
+
+import net.ivoa.oc.dao.ParametersDao;
+import net.ivoa.pdr.commons.ParamConfiguration;
+
+public class ParametersBusiness {
+	private static final ParametersBusiness instance = new ParametersBusiness();
+
+	public static ParametersBusiness getInstance() {
+		return instance;
+	}
+
+	private ParametersBusiness() {
+	}
+	
+	public Integer persistConfigurationAndGetId(ParamConfiguration configuration, Integer userId) throws SQLException, ClassNotFoundException{
+		return ParametersDao.getInstance().persistConfigurationAndGetId(configuration, userId);
+	}
+	
+	public Map<String,String> getConfigurationMap(Integer idConfiguration) throws SQLException, ClassNotFoundException{
+		return ParametersDao.getInstance().getConfigurationMap(idConfiguration);
+	}
+}

@@ -1,0 +1,31 @@
+package net.ivoa.pdr.business;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import net.ivoa.oc.dao.PurgeDAO;
+
+public class PurgeBusiness {
+	private static final PurgeBusiness instance = new PurgeBusiness();
+
+	public static PurgeBusiness getInstance() {
+		return instance;
+	}
+
+	private PurgeBusiness() {
+	}
+	
+	public List<Integer> getIdJobsToOld() throws SQLException,
+	ClassNotFoundException {
+		return PurgeDAO.getInstance().getIdJobsToOldAndDeleteThem();
+	}
+	
+	public void deleteJobsFromListIds(List<Integer> idToDelete) throws SQLException, ClassNotFoundException{
+		PurgeDAO.getInstance().removeJobsFromDB(idToDelete);
+	}
+	
+	public void purgeJobOutOfLimits() throws SQLException, ClassNotFoundException{
+		PurgeDAO.getInstance().purge();
+	}
+	
+}
