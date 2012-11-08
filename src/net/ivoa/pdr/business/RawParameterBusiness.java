@@ -7,6 +7,11 @@ import net.ivoa.oc.dao.RawParameterDao;
 
 import CommonsObjects.GeneralParameter;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
 
 public class RawParameterBusiness {
 	private static final RawParameterBusiness instance = new RawParameterBusiness();

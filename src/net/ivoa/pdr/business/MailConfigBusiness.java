@@ -5,6 +5,12 @@ import java.sql.SQLException;
 import net.ivoa.oc.dao.MailConfigDAO;
 import net.ivoa.pdr.commons.MailConfig;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
+
 public class MailConfigBusiness {
 	private static final MailConfigBusiness instance = new MailConfigBusiness();
 

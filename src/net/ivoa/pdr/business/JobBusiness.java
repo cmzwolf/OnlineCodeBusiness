@@ -7,6 +7,12 @@ import java.util.Map.Entry;
 import net.ivoa.oc.dao.JobDAO;
 import net.ivoa.pdr.commons.JobBean;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
+
 public class JobBusiness {
 	private static final JobBusiness instance = new JobBusiness();
 

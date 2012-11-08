@@ -6,6 +6,12 @@ import java.util.List;
 import net.ivoa.oc.dao.OutputsDAO;
 import net.ivoa.pdr.commons.IOFile;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
+
 public class OutputsBusiness {
 	private static final OutputsBusiness instance = new OutputsBusiness();
 

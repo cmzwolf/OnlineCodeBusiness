@@ -5,6 +5,12 @@ import java.util.List;
 
 import net.ivoa.oc.dao.PurgeDAO;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
+
 public class PurgeBusiness {
 	private static final PurgeBusiness instance = new PurgeBusiness();
 

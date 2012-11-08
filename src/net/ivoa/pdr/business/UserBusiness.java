@@ -6,6 +6,12 @@ import java.util.Map;
 import net.ivoa.oc.dao.NotificationsDAO;
 import net.ivoa.oc.dao.UserDAO;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
+
 public class UserBusiness {
 	private static final UserBusiness instance = new UserBusiness();
 

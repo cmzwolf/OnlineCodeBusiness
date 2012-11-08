@@ -11,6 +11,12 @@ import net.ivoa.pdr.commons.MailConfig;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
+
 public class MailSenderBusiness {
 
 	private static final MailSenderBusiness instance = new MailSenderBusiness();

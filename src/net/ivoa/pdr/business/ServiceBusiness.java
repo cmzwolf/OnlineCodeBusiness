@@ -5,6 +5,11 @@ import java.sql.SQLException;
 import net.ivoa.oc.dao.ServiceDao;
 import net.ivoa.pdr.commons.Service;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
 
 public class ServiceBusiness {
 	private static final ServiceBusiness instance = new ServiceBusiness();

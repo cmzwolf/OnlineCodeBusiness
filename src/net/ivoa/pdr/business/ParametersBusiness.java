@@ -6,6 +6,12 @@ import java.util.Map;
 import net.ivoa.oc.dao.ParametersDao;
 import net.ivoa.pdr.commons.ParamConfiguration;
 
+/**
+ * @author Carlo Maria Zwolf
+ * Observatoire de Paris
+ * LERMA
+ */
+
 public class ParametersBusiness {
 	private static final ParametersBusiness instance = new ParametersBusiness();
 
