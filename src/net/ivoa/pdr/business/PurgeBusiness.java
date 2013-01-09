@@ -23,7 +23,7 @@ public class PurgeBusiness {
 	
 	public List<Integer> getIdJobsToOld() throws SQLException,
 	ClassNotFoundException {
-		return PurgeDAO.getInstance().getIdJobsToOldAndDeleteThem();
+		return PurgeDAO.getInstance().getIdJobsToOld();
 	}
 	
 	public void deleteJobsFromListIds(List<Integer> idToDelete) throws SQLException, ClassNotFoundException{

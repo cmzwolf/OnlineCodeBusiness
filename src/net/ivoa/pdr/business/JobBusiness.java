@@ -8,9 +8,7 @@ import net.ivoa.oc.dao.JobDAO;
 import net.ivoa.pdr.commons.JobBean;
 
 /**
- * @author Carlo Maria Zwolf
- * Observatoire de Paris
- * LERMA
+ * @author Carlo Maria Zwolf Observatoire de Paris LERMA
  */
 
 public class JobBusiness {
@@ -92,8 +90,8 @@ public class JobBusiness {
 			}
 			if (null != job.getJobErrors() && job.getJobErrors().size() > 0) {
 				toReturn += "This job has the following errors: \n";
-				for(String currentError : job.getJobErrors()){
-					toReturn+= currentError+"\n";
+				for (String currentError : job.getJobErrors()) {
+					toReturn += currentError + "\n";
 				}
 			}
 		} else {
@@ -154,9 +152,16 @@ public class JobBusiness {
 				toReturn += "<p> Results for this job are </p>\n";
 				toReturn += "<table border = \"1\" cellpadding=\"0\" cellspacing=\"0\">";
 				for (String resultUrl : job.getJobResults()) {
+
 					toReturn += "<tr>\n";
-					toReturn += "<td> <a href=\"" + resultUrl + "\">"
-							+ resultUrl + "</td>\n";
+
+					if (resultUrl.substring(0, 6).equalsIgnoreCase("Value.")) {
+						Integer totalLengtOfFileExtension = resultUrl.length();
+						toReturn += resultUrl.substring(6,totalLengtOfFileExtension);
+					} else {
+						toReturn += "<td> <a href=\"" + resultUrl + "\">"
+								+ resultUrl + "</td>\n";
+					}
 					toReturn += "</tr>\n";
 				}
 				toReturn += "</table><br>";
