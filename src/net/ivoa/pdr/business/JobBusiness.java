@@ -2,6 +2,7 @@ package net.ivoa.pdr.business;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import net.ivoa.oc.dao.JobDAO;
@@ -36,9 +37,10 @@ public class JobBusiness {
 		return JobDAO.getInstance().getProcessedJobs();
 	}
 
-	public void insertResults(Integer idConfiguration, String urlResult)
-			throws SQLException, ClassNotFoundException {
-		JobDAO.getInstance().insertResults(idConfiguration, urlResult);
+	public void insertResults(Integer idConfiguration, String urlResult,
+			String resultName) throws SQLException, ClassNotFoundException {
+		JobDAO.getInstance().insertResults(idConfiguration, urlResult,
+				resultName);
 	}
 
 	public void markJobAsFinished(Integer idConfiguration) throws SQLException,
@@ -51,7 +53,7 @@ public class JobBusiness {
 		return JobDAO.getInstance().getFinishedJobs();
 	}
 
-	public List<String> getResultsFromIdJob(Integer idConfiguration)
+	public Map<String, String> getResultsFromIdJob(Integer idConfiguration)
 			throws SQLException, ClassNotFoundException {
 		return JobDAO.getInstance().getResultsFromIdJob(idConfiguration);
 	}
@@ -151,17 +153,19 @@ public class JobBusiness {
 			if (job.getJobResults().size() > 0) {
 				toReturn += "<p> Results for this job are </p>\n";
 				toReturn += "<table border = \"1\" cellpadding=\"0\" cellspacing=\"0\">";
-				for (String resultUrl : job.getJobResults()) {
+				for (Entry<String, String> result : job.getJobResults()
+						.entrySet()) {
+
+					String resultUrl = result.getValue();
+					String resultName = result.getKey();
 
 					toReturn += "<tr>\n";
+					
+					toReturn += "<td>"+resultName+"<td>\n";
+					
+					toReturn += "<td> <a href=\"" + resultUrl + "\">"
+							+ resultUrl + "</td>\n";
 
-					if (resultUrl.substring(0, 6).equalsIgnoreCase("Value.")) {
-						Integer totalLengtOfFileExtension = resultUrl.length();
-						toReturn += resultUrl.substring(6,totalLengtOfFileExtension);
-					} else {
-						toReturn += "<td> <a href=\"" + resultUrl + "\">"
-								+ resultUrl + "</td>\n";
-					}
 					toReturn += "</tr>\n";
 				}
 				toReturn += "</table><br>";

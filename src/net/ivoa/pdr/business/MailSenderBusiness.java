@@ -162,9 +162,10 @@ public class MailSenderBusiness {
 
 		toReturn = toReturn + "Hello,\n";
 		toReturn = toReturn
-				+ "the results of your computation are available at the following link:\n";
-		for (String currentResult : finishedJob.getJobResults()) {
-			toReturn = toReturn + currentResult + "\n";
+				+ "the results of your computation are available:\n";
+		for (Entry<String,String> result : finishedJob.getJobResults().entrySet()) {
+
+			toReturn = toReturn + result.getKey() + ":= "+ result.getValue()+"\n";
 		}
 		toReturn = toReturn + "\n";
 		toReturn = toReturn + "We recall you that :\n";
