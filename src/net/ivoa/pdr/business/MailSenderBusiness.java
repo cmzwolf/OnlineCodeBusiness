@@ -87,6 +87,10 @@ public class MailSenderBusiness {
 				+ " - Notification of job destruction");
 		email.setMsg(MailSenderBusiness.getInstance()
 				.buildMessageBodyForDeletingJob(jobToDelete, dateDemande));
+		
+		email.setSSL(true);
+		email.setSmtpPort(465);
+		
 		email.send();
 	}
 
@@ -116,6 +120,11 @@ public class MailSenderBusiness {
 			email.setSubject(mailConfig.getSubject()
 					+ " - Creation of new jobs");
 			email.setMsg(message);
+			
+			
+			email.setSSL(true);
+			email.setSmtpPort(465);
+			
 			email.send();
 		} catch (EmailException e) {
 			System.out.println("*** cannot send mail ***");
@@ -153,6 +162,10 @@ public class MailSenderBusiness {
 				+ " - Notification of available results");
 		email.setMsg(MailSenderBusiness.getInstance()
 				.buildMessageBodyFromResults(finishedJob));
+		
+		email.setSSL(true);
+		email.setSmtpPort(465);
+		
 		email.send();
 
 	}
