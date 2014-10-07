@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.ivoa.oc.dao.NotificationsDAO;
 import net.ivoa.pdr.commons.JobBean;
 import net.ivoa.pdr.commons.MailConfig;
 
@@ -12,9 +13,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 /**
- * @author Carlo Maria Zwolf
- * Observatoire de Paris
- * LERMA
+ * @author Carlo Maria Zwolf Observatoire de Paris LERMA
  */
 
 public class MailSenderBusiness {
@@ -28,8 +27,8 @@ public class MailSenderBusiness {
 	private MailSenderBusiness() {
 	}
 
-	public void notifyPurgeToUserAskedThisJob(JobBean job)
-			throws SQLException, ClassNotFoundException, EmailException {
+	public void notifyPurgeToUserAskedThisJob(JobBean job) throws SQLException,
+			ClassNotFoundException, EmailException {
 
 		MailConfig mailConfig = MailConfigBusiness.getInstance()
 				.getMailConfig();
@@ -37,12 +36,16 @@ public class MailSenderBusiness {
 		List<String> userAskedForThisJob = job.getUserAskedThisJob().get(0);
 		List<String> dateWhereUserAskedTheJob = job.getUserAskedThisJob()
 				.get(1);
+		List<String> userWantMail = job.getUserAskedThisJob().get(2);
 
 		for (int i = 0; i < userAskedForThisJob.size(); i++) {
-			String userMail = userAskedForThisJob.get(i);
-			String dateDemand = dateWhereUserAskedTheJob.get(i);
-			MailSenderBusiness.getInstance().sendMailNotifingPurge(userMail,
-					dateDemand, job, mailConfig);
+			// if the user want to receive a mail for notifying actions
+			if(userWantMail.get(i).equalsIgnoreCase("true")){
+				String userMail = userAskedForThisJob.get(i);
+				String dateDemand = dateWhereUserAskedTheJob.get(i);
+				MailSenderBusiness.getInstance().sendMailNotifingPurge(userMail,
+						dateDemand, job, mailConfig);
+			}		
 		}
 	}
 
@@ -52,10 +55,13 @@ public class MailSenderBusiness {
 		MailConfig mailConfig = MailConfigBusiness.getInstance()
 				.getMailConfig();
 
-		List<Integer> finishedJobs = JobBusiness.getInstance()
-				.getFinishedJobs();
+		System.out
+				.println("Getting the list of finished job that have to be notified to users");
+		List<Integer> finishedJobsToNotify = JobBusiness.getInstance()
+				.getFinishedJobsToBeNotified();
 
-		for (Integer currentJobId : finishedJobs) {
+		for (Integer currentJobId : finishedJobsToNotify) {
+			System.out.println("Trying to notify the job " + currentJobId);
 
 			JobBean finishedJob = JobBusiness.getInstance()
 					.getJobBeanFromIdJob(currentJobId);
@@ -63,13 +69,38 @@ public class MailSenderBusiness {
 			Map<Integer, String> mailToNotify = finishedJob.getUserToNotify();
 
 			for (Entry<Integer, String> entry : mailToNotify.entrySet()) {
+				System.out.println("Notifying the user " + entry.getKey()
+						+ " : " + entry.getValue());
+
 				try {
-					MailSenderBusiness.getInstance().sendMailNotifingResults(
-							entry.getValue(), finishedJob, mailConfig);
+					// If the user is not notified and asked for a receipt mail
+					for (Boolean currentFlag : NotificationsDAO.getInstance()
+							.hasToSentMailToUserNotNotified(entry.getKey(),
+									currentJobId)) {
+
+						if (currentFlag) {
+							System.out.println("sending mail");
+							MailSenderBusiness.getInstance()
+									.sendMailNotifingResults(entry.getValue(),
+											finishedJob, mailConfig);
+							System.out.println("mail successfully sent");
+						}
+
+					}
+
+					// Mark the user as notified (in both case he asked or not
+					// for a mail).
 					UserBusiness.getInstance().markUserAsNotifiedForGivenJob(
 							entry.getKey(), currentJobId);
+					System.out
+							.println("Job " + currentJobId
+									+ "Marked as notified for user "
+									+ entry.getValue());
 				} catch (Exception e) {
 					e.printStackTrace();
+					System.out.println("Fatal error in sanding to user "
+							+ entry.getValue() + " notifications for job "
+							+ currentJobId);
 				}
 			}
 		}
@@ -77,6 +108,7 @@ public class MailSenderBusiness {
 
 	private void sendMailNotifingPurge(String userMail, String dateDemande,
 			JobBean jobToDelete, MailConfig mailConfig) throws EmailException {
+
 		SimpleEmail email = new SimpleEmail();
 		email.setAuthentication(mailConfig.getUserName(),
 				mailConfig.getPassword());
@@ -87,29 +119,19 @@ public class MailSenderBusiness {
 				+ " - Notification of job destruction");
 		email.setMsg(MailSenderBusiness.getInstance()
 				.buildMessageBodyForDeletingJob(jobToDelete, dateDemande));
-		
+
 		email.setSSL(true);
 		email.setSmtpPort(465);
-		
+
 		email.send();
 	}
 
 	public void sendMailNotifingNewJobs(String userMail, Integer userId,
-			String jobsDescription) throws SQLException, ClassNotFoundException {
+			String message) throws SQLException, ClassNotFoundException {
 		try {
 			MailConfig mailConfig = MailConfigBusiness.getInstance()
 					.getMailConfig();
-			String message = "Hello,\n\n";
-
-			message += "Please visit the link "
-					+ GlobalTechConfigBusiness.getInstance()
-							.getServletContainer() + "JobSummary?mail="
-					+ userMail + "&userIdForUser=" + userId
-					+ " for job administration.\n\n";
-
-			message += "Computation demands have been just been recorded for the following jobs:\n";
-
-			message = message + jobsDescription;
+			
 
 			SimpleEmail email = new SimpleEmail();
 			email.setAuthentication(mailConfig.getUserName(),
@@ -120,11 +142,10 @@ public class MailSenderBusiness {
 			email.setSubject(mailConfig.getSubject()
 					+ " - Creation of new jobs");
 			email.setMsg(message);
-			
-			
+
 			email.setSSL(true);
 			email.setSmtpPort(465);
-			
+
 			email.send();
 		} catch (EmailException e) {
 			System.out.println("*** cannot send mail ***");
@@ -162,10 +183,10 @@ public class MailSenderBusiness {
 				+ " - Notification of available results");
 		email.setMsg(MailSenderBusiness.getInstance()
 				.buildMessageBodyFromResults(finishedJob));
-		
+
 		email.setSSL(true);
 		email.setSmtpPort(465);
-		
+
 		email.send();
 
 	}
@@ -176,9 +197,11 @@ public class MailSenderBusiness {
 		toReturn = toReturn + "Hello,\n";
 		toReturn = toReturn
 				+ "the results of your computation are available:\n";
-		for (Entry<String,String> result : finishedJob.getJobResults().entrySet()) {
+		for (Entry<String, String> result : finishedJob.getJobResults()
+				.entrySet()) {
 
-			toReturn = toReturn + result.getKey() + ":= "+ result.getValue()+"\n";
+			toReturn = toReturn + result.getKey() + ":= " + result.getValue()
+					+ "\n";
 		}
 		toReturn = toReturn + "\n";
 		toReturn = toReturn + "We recall you that :\n";
@@ -189,4 +212,3 @@ public class MailSenderBusiness {
 	}
 
 }
-

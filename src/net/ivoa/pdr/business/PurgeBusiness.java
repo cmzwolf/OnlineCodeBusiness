@@ -30,8 +30,5 @@ public class PurgeBusiness {
 		PurgeDAO.getInstance().removeJobsFromDB(idToDelete);
 	}
 	
-	public void purgeJobOutOfLimits() throws SQLException, ClassNotFoundException{
-		PurgeDAO.getInstance().purge();
-	}
 	
 }

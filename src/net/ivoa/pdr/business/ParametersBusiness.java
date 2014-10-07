@@ -22,8 +22,9 @@ public class ParametersBusiness {
 	private ParametersBusiness() {
 	}
 	
-	public Integer persistConfigurationAndGetId(ParamConfiguration configuration, Integer userId) throws SQLException, ClassNotFoundException{
-		return ParametersDao.getInstance().persistConfigurationAndGetId(configuration, userId);
+	public Integer persistConfigurationAndGetId(ParamConfiguration configuration, Integer userId,String gridID,
+			String jobNickName, Boolean MailRequested) throws SQLException, ClassNotFoundException{
+		return ParametersDao.getInstance().persistConfigurationAndGetId(configuration, userId,gridID,jobNickName,MailRequested);
 	}
 	
 	public Map<String,String> getConfigurationMap(Integer idConfiguration) throws SQLException, ClassNotFoundException{

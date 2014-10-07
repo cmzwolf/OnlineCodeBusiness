@@ -48,9 +48,9 @@ public class JobBusiness {
 		JobDAO.getInstance().markJobAsFinished(idConfiguration);
 	}
 
-	public List<Integer> getFinishedJobs() throws SQLException,
+	public List<Integer> getFinishedJobsToBeNotified() throws SQLException,
 			ClassNotFoundException {
-		return JobDAO.getInstance().getFinishedJobs();
+		return JobDAO.getInstance().getFinishedJobsToBeNotified();
 	}
 
 	public Map<String, String> getResultsFromIdJob(Integer idConfiguration)
@@ -63,6 +63,11 @@ public class JobBusiness {
 		return JobDAO.getInstance().getJobBeanFromIdJob(idConfiguration);
 	}
 
+	public JobBean getJobBeanFromIdJobLight(Integer idConfiguration)
+			throws SQLException, ClassNotFoundException {
+		return JobDAO.getInstance().getJobBeanFromIdJobLight(idConfiguration);
+	}
+	
 	public String getDateWhereUserAskedTheJob(Integer idUser, Integer idJob)
 			throws SQLException, ClassNotFoundException {
 		return JobDAO.getInstance().getDateWhereUserAskedTheJob(idUser, idJob);
