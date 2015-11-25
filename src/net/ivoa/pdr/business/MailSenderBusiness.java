@@ -40,12 +40,12 @@ public class MailSenderBusiness {
 
 		for (int i = 0; i < userAskedForThisJob.size(); i++) {
 			// if the user want to receive a mail for notifying actions
-			if(userWantMail.get(i).equalsIgnoreCase("true")){
+			if (userWantMail.get(i).equalsIgnoreCase("true")) {
 				String userMail = userAskedForThisJob.get(i);
 				String dateDemand = dateWhereUserAskedTheJob.get(i);
-				MailSenderBusiness.getInstance().sendMailNotifingPurge(userMail,
-						dateDemand, job, mailConfig);
-			}		
+				MailSenderBusiness.getInstance().sendMailNotifingPurge(
+						userMail, dateDemand, job, mailConfig);
+			}
 		}
 	}
 
@@ -120,8 +120,8 @@ public class MailSenderBusiness {
 		email.setMsg(MailSenderBusiness.getInstance()
 				.buildMessageBodyForDeletingJob(jobToDelete, dateDemande));
 
-		email.setSSL(true);
-		email.setSmtpPort(465);
+//		email.setSSL(true);
+//		email.setSmtpPort(465);
 
 		email.send();
 	}
@@ -131,7 +131,6 @@ public class MailSenderBusiness {
 		try {
 			MailConfig mailConfig = MailConfigBusiness.getInstance()
 					.getMailConfig();
-			
 
 			SimpleEmail email = new SimpleEmail();
 			email.setAuthentication(mailConfig.getUserName(),
@@ -143,8 +142,8 @@ public class MailSenderBusiness {
 					+ " - Creation of new jobs");
 			email.setMsg(message);
 
-			email.setSSL(true);
-			email.setSmtpPort(465);
+	//		email.setSSL(true);
+	//		email.setSmtpPort(465);
 
 			email.send();
 		} catch (EmailException e) {
@@ -184,8 +183,12 @@ public class MailSenderBusiness {
 		email.setMsg(MailSenderBusiness.getInstance()
 				.buildMessageBodyFromResults(finishedJob));
 
-		email.setSSL(true);
-		email.setSmtpPort(465);
+		//email.setSSL(true);
+		//email.setSmtpPort(465);
+
+		System.out.println("sending mail ***** " + mailConfig.getFromAdress()
+				+ " " + mailConfig.getPassword() + " "
+				+ mailConfig.getServerName());
 
 		email.send();
 

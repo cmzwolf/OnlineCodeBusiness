@@ -22,7 +22,7 @@ public class OutputsBusiness {
 	private OutputsBusiness() {
 	}
 
-	public List<IOFile> getPatternInputFile() throws SQLException,
+	public List<IOFile> getPatternOutputFile() throws SQLException,
 			ClassNotFoundException {
 		return OutputsDAO.getInstance().getOutputsFilesList();
 	}

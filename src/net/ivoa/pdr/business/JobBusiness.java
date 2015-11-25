@@ -67,7 +67,7 @@ public class JobBusiness {
 			throws SQLException, ClassNotFoundException {
 		return JobDAO.getInstance().getJobBeanFromIdJobLight(idConfiguration);
 	}
-	
+
 	public String getDateWhereUserAskedTheJob(Integer idUser, Integer idJob)
 			throws SQLException, ClassNotFoundException {
 		return JobDAO.getInstance().getDateWhereUserAskedTheJob(idUser, idJob);
@@ -82,6 +82,12 @@ public class JobBusiness {
 	public List<Integer> getListOfJobsAskedByUser(Integer idUser)
 			throws SQLException, ClassNotFoundException {
 		return JobDAO.getInstance().getListOfJobsAskedByUser(idUser);
+	}
+
+	public List<Integer> getListOfJobsAskedByUserAndGridId(Integer idUser,
+			String gridId) throws SQLException, ClassNotFoundException {
+		return JobDAO.getInstance().getListOfJobsAskedByUserAndGridId(idUser,
+				gridId);
 	}
 
 	public String describeJobInTextMode(JobBean job) {
@@ -121,10 +127,29 @@ public class JobBusiness {
 						.equalsIgnoreCase(""))) {
 			return "running";
 		}
+
+		boolean jobHasErrors = job.isHasError();
+		boolean isJobFinished = false;
+
 		if (null != job.getFinishingDate()
 				&& !job.getFinishingDate().equalsIgnoreCase("")) {
+			isJobFinished = true;
+		}
+
+		// if there are errors and the job is finished
+		if (jobHasErrors && isJobFinished) {
+			return "error";
+		}
+
+		// if there are errors and the job is not finished
+		if (jobHasErrors && !isJobFinished) {
+			return "abort";
+		}
+
+		if (isJobFinished) {
 			return "finished";
 		}
+
 		return "unknown";
 	}
 
@@ -165,9 +190,9 @@ public class JobBusiness {
 					String resultName = result.getKey();
 
 					toReturn += "<tr>\n";
-					
-					toReturn += "<td>"+resultName+"<td>\n";
-					
+
+					toReturn += "<td>" + resultName + "<td>\n";
+
 					toReturn += "<td> <a href=\"" + resultUrl + "\">"
 							+ resultUrl + "</td>\n";
 
@@ -182,5 +207,11 @@ public class JobBusiness {
 
 		return toReturn;
 	}
+
+	public void markJobAsHavingErrors(Integer idConfiguration) throws ClassNotFoundException, SQLException {
+		JobDAO.getInstance().markJobAsHavingErrors(idConfiguration);
+	}
+
+	
 
 }
