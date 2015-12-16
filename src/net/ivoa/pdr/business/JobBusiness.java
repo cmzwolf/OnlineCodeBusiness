@@ -90,6 +90,12 @@ public class JobBusiness {
 				gridId);
 	}
 
+	public List<Map<String, String>> getFinishedResultsByGridAndUser(
+			String gridId, Integer idUser) throws ClassNotFoundException, SQLException {
+		return JobDAO.getInstance().getFinishedResultsByGridAndUser(gridId,
+				idUser);
+	}
+
 	public String describeJobInTextMode(JobBean job) {
 		String toReturn = "The Id of this job in our database =="
 				+ job.getIdJob() + "\n\n";
@@ -208,10 +214,9 @@ public class JobBusiness {
 		return toReturn;
 	}
 
-	public void markJobAsHavingErrors(Integer idConfiguration) throws ClassNotFoundException, SQLException {
+	public void markJobAsHavingErrors(Integer idConfiguration)
+			throws ClassNotFoundException, SQLException {
 		JobDAO.getInstance().markJobAsHavingErrors(idConfiguration);
 	}
-
-	
 
 }
